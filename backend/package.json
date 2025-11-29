@@ -1,5 +1,24 @@
 {
+  "name": "ft_transcendance_backend",
+  "version": "1.0.0",
+  "description": "This project is the backend of ft_transcendance",
+  "type": "module",
+  "main": "app.ts",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "node --test test/**/*.test.ts",
+    "start": "fastify start -l info app.ts",
+    "dev": "fastify start -w -l info -P app.ts"
+  },
+  "author": "anoukan",
   "dependencies": {
-    "fastify": "^5.6.2"
-  }
+    "fastify": "^5.6.2",
+    "fastify-plugin": "^5.0.0",
+    "@fastify/autoload": "^6.0.0",
+    "@fastify/sensible": "^6.0.0",
+    "fastify-cli": "^7.4.1"
+  },
+  "devDependencies": {}
 }

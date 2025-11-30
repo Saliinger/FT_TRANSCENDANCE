@@ -10,15 +10,24 @@
   "scripts": {
     "test": "node --test test/**/*.test.ts",
     "start": "fastify start -l info app.ts",
-    "dev": "fastify start -w -l info -P app.ts"
+    "dev": "fastify start -w -l info -P app.ts",
+    "migrate": "for file in database/migrations/*.sql; do sqlite3 database/db.sqlite3 < \"$file\"; done"
   },
   "author": "anoukan",
   "dependencies": {
-    "fastify": "^5.6.2",
-    "fastify-plugin": "^5.0.0",
     "@fastify/autoload": "^6.0.0",
+    "@fastify/cors": "^11.1.0",
+    "@fastify/oauth2": "^8.1.2",
     "@fastify/sensible": "^6.0.0",
-    "fastify-cli": "^7.4.1"
+    "@fastify/websocket": "^11.2.0",
+    "better-sqlite3": "^12.5.0",
+    "fastify": "^5.6.2",
+    "fastify-cli": "^7.4.1",
+    "fastify-plugin": "^5.0.0",
+    "zod": "^4.1.13"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/ws": "^8.18.1"
+  }
 }

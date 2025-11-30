@@ -1,13 +1,22 @@
 import Fastify from 'fastify'
+import autoload from '@fastify/autoload'
+import path from 'path'
+import { fileURLToPath } from 'url'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 const fastify = Fastify({
   logger: true
 })
 
-// Declare a route
-fastify.get('/', function (request, reply) {
-  reply.send({ hello: 'world' })
-})
+await fastify.register(autoload, {
+	dir: path.join(__dirname, 'shared/plugins')
+});
+
+fastify.register(autoload, {
+	dir: path.join(__dirname, 'modules'),
+	options: { prefix: '/api' }
+});
 
 // Run the server!
 fastify.listen({ port: 3000 }, function (err, address) {

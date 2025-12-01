@@ -1,28 +1,17 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { CreateUserDTO, SafeUser } from "./user.model"
+import { CreateUserDTO, SafeUser } from "./user.model.ts"
 
 interface UserService {
-	create(toCreate: CreateUserDTO): Promise<SafeUser | null>,
 	getAll(): Promise<SafeUser[] | null>,
 	getByUsername(username: string): Promise<SafeUser | null>,
 	getOnline(): Promise<SafeUser[] | null>,
+	update(): Promise<SafeUser | null>,
 }
 
 export const createUserController = (userService: UserService) => {
 	return {
-		async create(
-			request: FastifyRequest<{ Body: CreateUserDTO }>,
-			reply: FastifyReply
-		) {
-			const body = request.body;
-			const newUser = await userService.create(body);
-			if (!newUser)
-				return reply.code(409).send({ error: "User already exists" });
-
-			return reply.code(201).send({ success: true, user: newUser });
-		},
 		async getAll(
-			request: null,
+			request: FastifyRequest,
 			reply: FastifyReply
 		) {
 			const users = await userService.getAll();
@@ -31,17 +20,18 @@ export const createUserController = (userService: UserService) => {
 			return reply.send({ success: true, users });
 		},
 		async getByUsername(
-			request: { username: string },
+			request: FastifyRequest<{ Body: string }>,
 			reply: FastifyReply
 		) {
-			const user = await userService.getByUsername(request.username);
+			const username = request.body;
+			const user = await userService.getByUsername(username);
 			if (!user)
 				return reply.code(404).send({ error: "User not found" });
 
 			return reply.send({ success: true, user });
 		},
 		async getOnline(
-			request: null,
+			request: FastifyRequest,
 			reply: FastifyReply
 		) {
 			const users = await userService.getOnline();
@@ -49,5 +39,11 @@ export const createUserController = (userService: UserService) => {
 				return reply.code(404).send({ error: "No online users" });
 			return reply.send({ success: true, users });
 		},
+		async update(
+			request: FastifyRequest,
+			reply: FastifyReply
+		) {
+
+		}
 	}
 }

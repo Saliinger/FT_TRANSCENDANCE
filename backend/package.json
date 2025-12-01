@@ -9,8 +9,8 @@
   },
   "scripts": {
     "test": "node --test test/**/*.test.ts",
-    "start": "fastify start -l info app.ts",
-    "dev": "fastify start -w -l info -P app.ts",
+    "start": "tsx app.ts",
+    "dev": "tsx watch app.ts",
     "migrate": "for file in database/migrations/*.sql; do sqlite3 database/db.sqlite3 < \"$file\"; done"
   },
   "author": "anoukan",
@@ -28,6 +28,9 @@
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.13",
-    "@types/ws": "^8.18.1"
+    "@types/node": "^24.10.1",
+    "@types/ws": "^8.18.1",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
   }
 }

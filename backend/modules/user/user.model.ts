@@ -11,25 +11,25 @@ export interface User {
 	oauthProvider?: '42' | null;
 	oauthId?: string;
 	twoFactorEnabled: boolean;
-  	twoFactorSecret?: string;
+	twoFactorSecret?: string;
 
 	status: 'online' | 'offline' | 'in-game';
-	
+
 	lastSeen: Date;
-	createdAt:Date;
+	createdAt: Date;
 	updatedAt: Date;
-};
+}
 
 export interface SafeUser extends Omit<User, 'passwordHash' | 'twoFactorSecret'> {
-};
+}
 
 export interface CreateUserDTO {
 	username: string;
 	email: string;
 	password: string;
 	displayName?: string;
-};
+}
 
 export interface UpdateUserDTO {
 	displayName?: string;
-};
+}

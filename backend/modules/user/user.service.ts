@@ -1,11 +1,8 @@
 import { FastifyInstance } from "fastify";
-import { CreateUserDTO, SafeUser } from "./user.model";
+import { SafeUser } from "./user.model.ts";
 
 export const createUserService = (fastify: FastifyInstance) => {
 	return {
-		async create(toCreate: CreateUserDTO): Promise<SafeUser | null> {
-			return null;
-		},
 		async getAll(): Promise<SafeUser[] | null> {
 			return null;
 		},
@@ -13,6 +10,9 @@ export const createUserService = (fastify: FastifyInstance) => {
 			return null;
 		},
 		async getOnline(): Promise<SafeUser[] | null> {
+			return null;
+		},
+		async update(): Promise<SafeUser | null> {
 			return null;
 		}
 	}

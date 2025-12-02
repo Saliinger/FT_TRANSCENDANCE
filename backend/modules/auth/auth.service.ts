@@ -31,6 +31,48 @@ export const createAuthService = (fastify: FastifyInstance) => {
 			);
 
 			return null;
+		},
+		async handleOAuth42(code: string) {
+			const tokenResponse = await fetch('https://api.intra.42.fr/oauth/token', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					grant_type: 'authorization_code',
+					client_id: process.env.OAUTH_42_CLIENT_ID,
+					client_secret: process.env.OAUTH_42_CLIENT_SECRET,
+					code,
+					redirect_uri: process.env.OAUTH_42_REDIRECT_URI
+				})
+			});
+
+			const { access_token } = await tokenResponse.json();
+
+			const profileResponse = await fetch('https://api.intra.42.fr/v2/me', {
+				headers: { Authorization: `Bearer ${access_token}` }
+			});
+
+			const profile = await profileResponse.json();
+
+			let user = await fastify.db.queryOne<User>(
+				'SELECT * FROM users WHERE oauthProvider = ? AND oauthId = ?',
+				['42', profile.id.toString()]
+			);
+
+			if (!user) {
+				const userId = crypto.randomUUID();
+				await fastify.db.execute(
+					'INSERT INTO users (id, username, email, passwordHash, displayName, oauthProvider, oauthId, ...) VALUES (...)',
+					[userId, profile.login, profile.email, '', profile.usual_full_name, '42', profile.id, ...]
+				);
+				user = await fastify.db.queryOne('SELECT * FROM users WHERE id = ?', [userId]);
+			}
+
+			const token = fastify.jwt.sign({
+				userId: user.id,
+				email: user.email
+			});
+
+			return { user, token };
 		}
 
 	}

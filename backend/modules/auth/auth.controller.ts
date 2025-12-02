@@ -17,6 +17,7 @@ interface RegisterBody {
 interface AuthService {
 	login(email: string, password: string): Promise<SafeUser | null>;
 	register(toCreate: CreateUserDTO): Promise<SafeUser | null>;
+	handleOAuth42(code: string): Promise<SafeUser | null>;
 }
 
 export const createAuthController = (authService: AuthService) => {
@@ -52,7 +53,15 @@ export const createAuthController = (authService: AuthService) => {
 				displayName: toCheck.displayName,
 			};
 			const user = authService.register(toCreate);
-
+			if (!user)
+				return reply.code(400).send({ error: "can't create the user" });
+			return reply.send({success: true, user});
 		},
+		async handleOAuth42(
+			request: FastifyRequest,
+			reply: FastifyReply,
+		) {
+			return null;
+		}
 	};
 };
